@@ -1,0 +1,11 @@
+Logic Gate Simulator
+- Sidebar with logic gates
+- Auto-generate truth tables
+- Clear connections / wires
+- Save / Load
+- Clock
+- SR / JK Switches supported
+- Generate word equation
+
+Maybes:
+- Generates circuit from word equation

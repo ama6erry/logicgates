@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="350"
+   height="200"
+   viewBox="0 0 92.604164 52.916667"
+   version="1.1"
+   id="svg1"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="true">
+    <inkscape:grid
+       id="grid4"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="0.26458333"
+       spacingy="0.26458333"
+       empcolor="#3f3fff"
+       empopacity="0.25098039"
+       color="#3f3fff"
+       opacity="0.1254902"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0.6226153,0,1 @ F,0,0,1,0,0.74151014,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.36231;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       d="M 0,52.916667 V 0.6226153 A 0.38479742,0.38479742 148.28253 0 1 0.55688406,0.27844202 L 52.25344,26.12672 a 0.37075507,0.37075507 90 0 1 0,0.663226 z"
+       id="path1"
+       sodipodi:nodetypes="cccc"
+       inkscape:path-effect="#path-effect1"
+       inkscape:original-d="M 0,52.916667 V 0 l 52.916667,26.458333 z"
+       transform="matrix(0.90613419,0,0,0.90901339,18.723215,2.2961788)" />
+    <circle
+       style="fill:#fcfcfc;fill-opacity:1;stroke:#000000;stroke-width:1.017;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path2"
+       cx="70.080162"
+       cy="26.458334"
+       r="3.7109177" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.23666;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 73.870203,26.458333 h 6.519822"
+       id="path3" />
+    <circle
+       style="fill:#fcfcfc;fill-opacity:1;stroke:#000000;stroke-width:0.396875;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path4"
+       cx="80.835327"
+       cy="26.458334"
+       r="1.1637423" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.23666;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 11.689337,15.432874 h 6.519822"
+       id="path3-6" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.23666;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 11.665501,36.715018 h 6.519822"
+       id="path3-4" />
+    <circle
+       style="fill:#fcfcfc;fill-opacity:1;stroke:#000000;stroke-width:0.396875;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path4-9"
+       cx="10.745524"
+       cy="15.411448"
+       r="1.1637423" />
+    <circle
+       style="fill:#fcfcfc;fill-opacity:1;stroke:#000000;stroke-width:0.396875;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path4-4"
+       cx="10.825229"
+       cy="36.648247"
+       r="1.1637423" />
+  </g>
+</svg>
