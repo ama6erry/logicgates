@@ -91,6 +91,23 @@ class LogicGate:
         gfxdraw.aacircle(screen, self.gateRect.x - 25, self.gateRect.y + 136, 25, (0, 0 ,0))
         pygame.draw.ellipse(screen, (255, 255, 255), pygame.Rect(self.gateRect.x + 266, self.gateRect.y + 71, 50, 50), 0)
         gfxdraw.aacircle(screen, self.gateRect.x + 291, self.gateRect.y + 96, 25, (0, 0 ,0))
+
+        ConnectedTo = self.GateConnections.ConnectedTo
+        
+        position1 = (self.gateRect.x + 266, self.gateRect.y + 71)
+
+        for i in ConnectedTo:
+            gate = gates[i.id]
+            type = gate.gateType
+            if type == 'D':
+                if i.ConnectionNumber == 0:
+                    position2 = (gate.gateRect.x - 50, gate.gateRect.y + 29)
+                elif i.ConnectionNumber == 1:
+                    position2 = (gate.gateRect.x - 50, gate.gateRect.y + 111)
+            else:
+                position2 = (gate.gateRect.x - 50, gate.gateRect.y + 71)
+            pygame.draw.line(screen, (0, 0, 0), position1, position2, 15)
+
     def Connections(self):
         return [pygame.Rect(self.gateRect.x - 50, self.gateRect.y + 29, 50, 50), pygame.Rect(self.gateRect.x - 50, self.gateRect.y + 111, 50, 50), pygame.Rect(self.gateRect.x + 266, self.gateRect.y + 71, 50, 50)]
 
@@ -109,6 +126,23 @@ class inputGate(LogicGate):
         DrawText(str(self.Output), 150, (0, 0, 0), self.gateRect.x + 162, self.gateRect.y + 103)
         pygame.draw.ellipse(screen, (255, 255, 255), pygame.Rect(self.gateRect.x + 266, self.gateRect.y + 71, 50, 50))
         gfxdraw.aacircle(screen, self.gateRect.x + 291, self.gateRect.y + 96, 25, (0, 0, 0))
+
+        ConnectedTo = self.GateConnections.ConnectedTo
+
+        position1 = (self.gateRect.x + 266, self.gateRect.y + 71)
+
+        for i in ConnectedTo:
+            gate = gates[i.id]
+            type = gate.gateType
+            if type == 'D':
+                if i.ConnectionNumber == 0:
+                    position2 = (gate.gateRect.x - 50, gate.gateRect.y + 29)
+                elif i.ConnectionNumber == 1:
+                    position2 = (gate.gateRect.x - 50, gate.gateRect.y + 111)
+            else:
+                position2 = (gate.gateRect.x - 50, gate.gateRect.y + 71)
+            pygame.draw.line(screen, (0, 0, 0), position1, position2, 15)
+
     def Connections(self):
         return [-1, -1, pygame.Rect(self.gateRect.x + 266, self.gateRect.y + 71, 50, 50)]
 
@@ -143,6 +177,23 @@ class notGate(LogicGate):
         gfxdraw.aacircle(screen, self.gateRect.x - 25, self.gateRect.y + 96, 25, (0, 0, 0))
         pygame.draw.ellipse(screen, (255, 255, 255), pygame.Rect(self.gateRect.x + 266, self.gateRect.y + 71, 50, 50))
         gfxdraw.aacircle(screen, self.gateRect.x + 291, self.gateRect.y + 96, 25, (0, 0, 0))
+
+        ConnectedTo = self.GateConnections.ConnectedTo
+
+        position1 = (self.gateRect.x + 266, self.gateRect.y + 71)
+
+        for i in ConnectedTo:
+            gate = gates[i.id]
+            type = gate.gateType
+            if type == 'D':
+                if i.ConnectionNumber == 0:
+                    position2 = (gate.gateRect.x - 50, gate.gateRect.y + 29)
+                elif i.ConnectionNumber == 1:
+                    position2 = (gate.gateRect.x - 50, gate.gateRect.y + 111)
+            else:
+                position2 = (gate.gateRect.x - 50, gate.gateRect.y + 71)
+            pygame.draw.line(screen, (0, 0, 0), position1, position2, 15)
+
     def Connections(self):
         return [pygame.Rect(self.gateRect.x - 50, self.gateRect.y + 71, 50, 50), -1, pygame.Rect(self.gateRect.x + 266, self.gateRect.y + 71, 50, 50)]
 
