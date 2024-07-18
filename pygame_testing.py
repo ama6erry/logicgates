@@ -36,6 +36,7 @@ class Connection: #Data type for storing connections
         self.GateID = GateID #ID of the gate the connection resides in
         self.active = False #Determines whether 
         self.value = False #Value of signal (On / Off)
+        self.LinkedWith = None #If the connection is not 2, stores the ID of the gate it recieves inputs from
 
 class OutputSignal:
     def __init__(self, ConnectionNumber, idNum):
@@ -45,6 +46,7 @@ class OutputSignal:
 class GateConnections: #Stores all the connections and their values
     def __init__(self, gateType, GateID):
         self.gateType = gateType #Single input gate / Double input gate
+        self.GateID = GateID
         if gateType == 'S':
             self.activeConnections = [Connection(0, GateID), -1, Connection(2, GateID)] #Stores the connections of the gate
         elif gateType == 'D':
@@ -56,21 +58,23 @@ class GateConnections: #Stores all the connections and their values
         self.ConnectedTo = [] #Array of OutputSignal's that store the ID of the gate and its connection number
     def ConnectTo(self, idNum, ConNum):
         self.ConnectedTo.append(OutputSignal(ConNum, idNum))
+        print(self.GateID)
+        gates[idNum].GateConnections.activeConnections[ConNum].LinkedWith = self.GateID
     def GetActiveConnection(self, ConNum):
         return self.activeConnections[ConNum]
     def SetConnection(self, ConNum, Value):
-        self.activeConnections[ConNum].value = Value
+        if self.activeConnections[ConNum] != -1:
+            self.activeConnections[ConNum].value = Value
     def OutputConnections(self):
         val = self.activeConnections[2].value
-        for i in gates:
-            for j in self.ConnectedTo:
-                if i.id == j.id:
-                    i.GateConnections.SetConnection(j.ConnectionNumber, val)
+        for j in self.ConnectedTo:
+            gates[j.id].GateConnections.SetConnection(j.ConnectionNumber, val)
     def Disconnect(self, idNum, ConNum):
         for i in self.ConnectedTo:
             if i.id == idNum and i.ConnectionNumber == ConNum:
                 index = self.ConnectedTo.index(i)
         del self.ConnectedTo[index]
+        gates[idNum].GateConnections.activeConnections[ConNum].LinkedWith = None
     def ToggleConnection(self, Active, ConNum):
         self.activeConnections[ConNum].active == Active
 
@@ -82,7 +86,7 @@ class LogicGate:
         self.gateRect = Image.get_rect()
         self.gateRect.x = x
         self.gateRect.y = y
-        self.GateConnections = GateConnections(gateType, id)
+        self.GateConnections = GateConnections(gateType, idNum)
     def draw(self):      
         screen.blit(self.Image, self.gateRect)
         pygame.draw.ellipse(screen, (255, 255, 255), pygame.Rect(self.gateRect.x - 50, self.gateRect.y + 29, 50, 50), 0) #Connection 0 
@@ -114,12 +118,17 @@ class LogicGate:
 class inputGate(LogicGate):
     def __init__(self, idNum, x, y, gateType, Image):
         super().__init__(idNum, x, y, gateType, Image)
-        value = self.GateConnections.activeConnections[2].value
-        if value:
+        self.value = self.GateConnections.activeConnections[2].value
+        if self.value:
             self.Output = 1
         else:
             self.Output = 0
     def UpdateIO(self):
+        self.value = self.GateConnections.activeConnections[2].value
+        if self.value:
+            self.Output = 1
+        else:
+            self.Output = 0
         self.GateConnections.OutputConnections()
     def draw(self):      
         screen.blit(self.Image, self.gateRect)
@@ -149,14 +158,17 @@ class inputGate(LogicGate):
 class outputGate(LogicGate):
     def __init__(self, idNum, x, y, gateType, Image):
         super().__init__(idNum, x, y, gateType, Image)
-        value = self.GateConnections.activeConnections[0].value
-        if value:
+        self.value = self.GateConnections.activeConnections[0].value
+        if self.value:
             self.Output = 1
         else:
             self.Output = 0
     def UpdateIO(self):
-        on = self.GateConnections.activeConnections[0].value
-        self.GateConnections.activeConnections[2].value = not on
+        self.value = self.GateConnections.activeConnections[0].value
+        if self.value:
+            self.Output = 1
+        else:
+            self.Output = 0
     def draw(self):      
         screen.blit(self.Image, self.gateRect)
         DrawText(str(self.Output), 150, (0, 0, 0), self.gateRect.x + 102, self.gateRect.y + 103)
@@ -171,6 +183,7 @@ class notGate(LogicGate):
     def UpdateIO(self):
         on = self.GateConnections.activeConnections[0].value
         self.GateConnections.activeConnections[2].value = not on
+        self.GateConnections.OutputConnections()
     def draw(self):      
         screen.blit(self.Image, self.gateRect)
         pygame.draw.ellipse(screen, (255, 255, 255), pygame.Rect(self.gateRect.x - 50, self.gateRect.y + 71, 50, 50))
@@ -204,6 +217,7 @@ class andGate(LogicGate):
         on1 = self.GateConnections.activeConnections[0].value
         on2 = self.GateConnections.activeConnections[1].value
         self.GateConnections.activeConnections[2].value = on1 and on2
+        self.GateConnections.OutputConnections()
 
 class nandGate(LogicGate):
     def __init__(self, idNum, x, y, gateType, Image):
@@ -211,7 +225,8 @@ class nandGate(LogicGate):
     def UpdateIO(self):
         on1 = self.GateConnections.activeConnections[0].value
         on2 = self.GateConnections.activeConnections[1].value
-        self.GateConnections.activeConnections[2].value = on1 and on2
+        self.GateConnections.activeConnections[2].value = not (on1 and on2)
+        self.GateConnections.OutputConnections()
 
 class orGate(LogicGate):
     def __init__(self, idNum, x, y, gateType, Image):
@@ -220,6 +235,7 @@ class orGate(LogicGate):
         on1 = self.GateConnections.activeConnections[0].value
         on2 = self.GateConnections.activeConnections[1].value
         self.GateConnections.activeConnections[2].value = on1 or on2
+        self.GateConnections.OutputConnections()
     
 class norGate(LogicGate):
     def __init__(self, idNum, x, y, gateType, Image):
@@ -227,7 +243,8 @@ class norGate(LogicGate):
     def UpdateIO(self):
         on1 = self.GateConnections.activeConnections[0].value
         on2 = self.GateConnections.activeConnections[1].value
-        self.GateConnections.activeConnections[2].value =  not on1 or on2
+        self.GateConnections.activeConnections[2].value =  not (on1 or on2)
+        self.GateConnections.OutputConnections()
 
 class xorGate(LogicGate):
     def __init__(self, idNum, x, y, gateType, Image):
@@ -236,6 +253,7 @@ class xorGate(LogicGate):
         on1 = self.GateConnections.activeConnections[0].value
         on2 = self.GateConnections.activeConnections[1].value
         self.GateConnections.activeConnections[2].value =  on1 ^ on2
+        self.GateConnections.OutputConnections()
     
 class xnorGate(LogicGate):
     def __init__(self, idNum, x, y, gateType, Image):
@@ -243,15 +261,18 @@ class xnorGate(LogicGate):
     def UpdateIO(self):
         on1 = self.GateConnections.activeConnections[0].value
         on2 = self.GateConnections.activeConnections[1].value
-        self.GateConnections.activeConnections[2].value =  not on1 ^ on2
+        self.GateConnections.activeConnections[2].value =  not (on1 ^ on2)
+        self.GateConnections.OutputConnections()
 
 gates = []
 activeGate = None
+gateMoving = False
+connectionMoving = False
 InitialActiveConnection = None
 activeConnection = [-1, -1] # Connection Rect / Gate ID
 
 def createGate(gate):
-    id = len(gates) - 1
+    id = len(gates)
     value = None
     match gate:
         case 'NOT':
@@ -280,7 +301,25 @@ def GetActiveGate(pos):
     for num, gate in enumerate(gates):
         if gate.gateRect.collidepoint(pos):
             activeGate = num
-            
+
+def GetActiveConnection(pos):
+    global activeConnection
+    global connections
+    global InitialActiveConnection
+    for num, gate in enumerate(gates):
+        connections = gate.Connections()
+        if connections[0] != -1 and connections[0].collidepoint(pos):
+            activeConnection[0] = connections[0]
+            InitialActiveConnection = 0
+            activeConnection[1] = num 
+        elif connections[1] != -1 and connections[1].collidepoint(pos):
+            activeConnection[0] = connections[1]
+            InitialActiveConnection = 1
+            activeConnection[1] = num    
+        elif connections[2] != -1 and connections[2].collidepoint(pos):           
+            activeConnection[0] = connections[2]
+            InitialActiveConnection = 2
+            activeConnection[1] = num
 
 def DrawText(text, size, color, x, y):
     font = pygame.font.Font('freesansbold.ttf', size)
@@ -288,9 +327,6 @@ def DrawText(text, size, color, x, y):
     textRect = text.get_rect()
     textRect.center = (x, y)
     screen.blit(text, textRect)
-
-def HandleConnection(connections):
-    pass
 
 while running:
     screen.fill("grey")
@@ -304,23 +340,37 @@ while running:
                         activeGate = num
                     if activeGate == None:
                         connections = gate.Connections()
-                        print(connections)
                         if connections[0] != -1 and connections[0].collidepoint(event.pos):
                             output = False
                             activeConnection[0] = connections[0]
                             InitialActiveConnection = 0
                             activeConnection[1] = num
+                            connectionMoving = True
                         elif connections[1] != -1 and connections[1].collidepoint(event.pos):
                             output = False
                             activeConnection[0] = connections[1]
                             InitialActiveConnection = 1
                             activeConnection[1] = num
+                            connectionMoving = True
                         elif connections[2] != -1 and connections[2].collidepoint(event.pos):
                             output = True
                             activeConnection[0] = connections[2]
                             activeConnection[1] = num
+                            connectionMoving = True
+            if event.button == 3:
+                GetActiveConnection(pygame.mouse.get_pos())
+                if InitialActiveConnection != 2:
+                    gate1 = gates[activeConnection[1]]
+                    SourceGateID = gate1.GateConnections.activeConnections[InitialActiveConnection].LinkedWith
+                    print('source : ', str(SourceGateID))
+                    print('IAC : ', str(InitialActiveConnection))
+                    gate2 = gates[SourceGateID]
+                    print(gate2.gateType)
+                    gate2.GateConnections.Disconnect(gate1.id, InitialActiveConnection)
+                    gate1.GateConnections.activeConnections[InitialActiveConnection].value = False
         if event.type == pygame.MOUSEMOTION:
             if activeGate != None:
+                gateMoving = True
                 gates[activeGate].gateRect.move_ip(event.rel)
             elif activeConnection[0] != -1:
                 pass #Do nothing
@@ -331,6 +381,13 @@ while running:
                 CamX += dx
                 CamY += dy
         if event.type == pygame.MOUSEBUTTONUP:
+            if not gateMoving and not connectionMoving:
+                if activeGate != None:
+                    gate = gates[activeGate]
+                    if gate.gateType == 'I':
+                        gate.GateConnections.activeConnections[2].value = not gate.GateConnections.activeConnections[2].value
+
+            gateMoving = False
             activeGate = None
             if activeConnection[0] != None:
                 for num, gate in enumerate(gates):
@@ -346,6 +403,7 @@ while running:
                         elif connections[2] != -1 and connections[2].collidepoint(event.pos) and output == False:
                             gates[num].GateConnections.ConnectTo(gateID, InitialActiveConnection)
                             print('Gate ' + str(num) + 'connected to gate ' + str(gateID))
+                connectionMoving = False
                         
             activeConnection[0] = -1     
         if event.type == pygame.KEYDOWN:
@@ -370,13 +428,28 @@ while running:
             if event.key == pygame.K_d:
                 position = pygame.mouse.get_pos()
                 GetActiveGate(position)
+                gate = gates[activeGate]
                 print('Current active connections for gate ', activeGate, ':')
-                for i in gates[activeGate].GateConnections.ConnectedTo:
+                for i in gate.GateConnections.ConnectedTo:
                     print('Gate: ', i.id)
                     print('Connection Number: ', i.ConnectionNumber)
                     print('----------------------')
-                if gates[activeGate].gateType != 'O':
-                    print('Current output value = ', gates[activeGate].GateConnections.activeConnections[2].value)
+                if gate.gateType == 'O':
+                    print('Connection 0: ', gate.GateConnections.activeConnections[0].value, f' (Connected to gate {gate.GateConnections.activeConnections[0].LinkedWith})')
+                    print('Current output value = ', gate.Output)
+                else:
+                    print('Current output value = ', gate.GateConnections.activeConnections[2].value)           
+                    if gate.gateType == 'S':
+                        print('Connection 0: ', gate.GateConnections.activeConnections[0].value, f' (Connected to gate {gate.GateConnections.activeConnections[0].LinkedWith})')
+                        print('Connection 2: ', gate.GateConnections.activeConnections[2].value)
+                    elif gate.gateType == 'D':
+                        print('Connection 0: ', gate.GateConnections.activeConnections[0].value, f' (Connected to gate {gate.GateConnections.activeConnections[0].LinkedWith})')
+                        print('Connection 1: ', gate.GateConnections.activeConnections[1].value, f' (Connected to gate {gate.GateConnections.activeConnections[1].LinkedWith})')
+                        print('Connection 2: ', gate.GateConnections.activeConnections[2].value)
+                    elif gate.gateType == 'I':
+                        print('Connection 2: ', gate.GateConnections.activeConnections[2].value)
+                print('<--------------------------------------------->')
+                
                 activeGate = None
 
 
@@ -385,6 +458,7 @@ while running:
 
     for i in gates:
         i.draw()
+        i.UpdateIO()
 
     pygame.display.flip()
 
